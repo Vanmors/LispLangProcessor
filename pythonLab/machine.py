@@ -67,14 +67,17 @@ class DataPath:
         self.memory.append(self.registers[register])
 
     def zero(self):
-        return self.alu == 48
+        return self.alu == 0
 
     def set_alu(self, register):
         self.alu = self.registers[register]
 
     def signal_input(self, register):
         if len(self.input_buffer) == 0:
-            raise EOFError()
+            # raise EOFError()
+            self.latch_register_input(register, 0)
+            self.set_alu(register)
+            return
         symbol = self.input_buffer.pop(0)
         symbol_code = ord(symbol)
         assert -128 <= symbol_code <= 127, "input token is out of bound: {}".format(symbol_code)
@@ -97,6 +100,7 @@ class DataPath:
 
     def div_alu(self, register1, register2, register_out):
         self.registers[register_out] = self.registers[register1] / self.registers[register2]
+
 
 class ControlUnit:
     program_counter = None
@@ -147,27 +151,27 @@ class ControlUnit:
             return True
         if opcode is Opcode.JG:
 
-            if self.data_path.zero():
-                self.signal_latch_program_counter(sel_next=False)
-            else:
+            if self.data_path.get_comparator() == 1:
                 self.signal_latch_program_counter(sel_next=True)
+            else:
+                self.signal_latch_program_counter(sel_next=False)
             self.tick()
 
         if opcode is Opcode.JL:
 
             if self.data_path.get_comparator() == 2:
-                self.signal_latch_program_counter(sel_next=False)
-            else:
                 self.signal_latch_program_counter(sel_next=True)
+            else:
+                self.signal_latch_program_counter(sel_next=False)
             self.tick()
 
             return True
         if opcode is Opcode.JE:
 
-            if self.data_path.get_comparator() != 0:
-                self.signal_latch_program_counter(sel_next=False)
-            else:
+            if self.data_path.get_comparator() == 0:
                 self.signal_latch_program_counter(sel_next=True)
+            else:
+                self.signal_latch_program_counter(sel_next=False)
             self.tick()
 
             return True
@@ -287,8 +291,8 @@ def main(code_file, input_file):
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.DEBUG)
-    # code_file = "target.txt"
-    # input_file = "input_text.txt"
-    assert len(sys.argv) == 3, "Wrong arguments: machine.py <code_file> <input_file>"
-    _, code_file, input_file = sys.argv
+    code_file = "target.txt"
+    input_file = "input_text.txt"
+    # assert len(sys.argv) == 3, "Wrong arguments: machine.py <code_file> <input_file>"
+    # _, code_file, input_file = sys.argv
     main(code_file, input_file)

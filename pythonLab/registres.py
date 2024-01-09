@@ -13,7 +13,7 @@ class Registres:
         for i in range(len(self.registers)):
             if self.registers[f"R{i + 1}"] is None:
                 return f"R{i + 1}"
-        return ""
+        raise ValueError("Registers is over.")
 
     def put_in_register(self, register: str, value: int):
         self.registers[register] = value

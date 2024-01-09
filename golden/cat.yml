@@ -2,7 +2,7 @@ in_source: |-
   (read_char a
     (loop (> a 0) (print_char a) (read_char a)))
 in_stdin: |-
-  Ivan0
+  Ivan
 out_code: |-
   [{"index": 1, "opcode": "IN", "register": "R1", "name": "a"},
    {"index": 2, "opcode": "LD", "register": "R2", "arg": 0},
@@ -50,10 +50,9 @@ out_log: |
   DEBUG   machine:simulation    TICK:  22 PC:   4 ALU: 110 	OUT R1
   DEBUG   machine:signal_output output: 'Iva' << 'n'
   DEBUG   machine:simulation    TICK:  23 PC:   5 ALU: 110 	IN R1 a
-  DEBUG   machine:signal_input  input: '0'
-  DEBUG   machine:simulation    TICK:  24 PC:   6 ALU: 110 	JMP
-  DEBUG   machine:simulation    TICK:  25 PC:   1 ALU: 110 	LD R2
-  DEBUG   machine:simulation    TICK:  26 PC:   2 ALU: 110 	CMP R1
-  DEBUG   machine:simulation    TICK:  27 PC:   3 ALU: 48 	JG
-  DEBUG   machine:simulation    TICK:  28 PC:   7 ALU: 48 	HLT
+  DEBUG   machine:simulation    TICK:  24 PC:   6 ALU: 0 	JMP
+  DEBUG   machine:simulation    TICK:  25 PC:   1 ALU: 0 	LD R2
+  DEBUG   machine:simulation    TICK:  26 PC:   2 ALU: 0 	CMP R1
+  DEBUG   machine:simulation    TICK:  27 PC:   3 ALU: 0 	JG
+  DEBUG   machine:simulation    TICK:  28 PC:   7 ALU: 0 	HLT
   INFO    machine:simulation    output_buffer: 'Ivan'

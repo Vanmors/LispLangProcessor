@@ -14,7 +14,7 @@ out_code: |-
    {"index": 8, "opcode": "ST", "register": "R1", "name": "hello"},
    {"index": 9, "opcode": "LD", "register": "R1", "arg": 111},
    {"index": 10, "opcode": "ST", "register": "R1", "name": "hello"},
-   {"index": 11, "opcode": "LD", "register": "R1", "arg": 48},
+   {"index": 11, "opcode": "LD", "register": "R1", "arg": 0},
    {"index": 12, "opcode": "ST", "register": "R1", "name": "hello"},
    {"index": 13, "opcode": "LD", "register": "R0", "arg": 0},
    {"index": 14, "opcode": "LD", "register": "R1", "name": "hello"},
@@ -87,6 +87,6 @@ out_log: |
   DEBUG   machine:simulation    TICK:  48 PC:  13 ALU: 1 	LD R1 hello
   DEBUG   machine:simulation    TICK:  49 PC:  14 ALU: 1 	LD R2
   DEBUG   machine:simulation    TICK:  50 PC:  15 ALU: 1 	CMP R1
-  DEBUG   machine:simulation    TICK:  51 PC:  16 ALU: 48 	JG
-  DEBUG   machine:simulation    TICK:  52 PC:  20 ALU: 48 	HLT
+  DEBUG   machine:simulation    TICK:  51 PC:  16 ALU: 0 	JG
+  DEBUG   machine:simulation    TICK:  52 PC:  20 ALU: 0 	HLT
   INFO    machine:simulation    output_buffer: 'hello'

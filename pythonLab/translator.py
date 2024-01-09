@@ -182,7 +182,7 @@ class LispParser:
                      "name": tokens[start_index + 1]})
             self.code.append(
                 {"index": len(self.code) + 1, "opcode": Opcode.LD, "register": number,
-                 "arg": 48})
+                 "arg": 0})
             self.code.append(
                 {"index": len(self.code) + 1, "opcode": Opcode.ST, "register": number,
                  "name": tokens[start_index + 1]})
@@ -390,8 +390,8 @@ def main(source, target):
 
 
 if __name__ == "__main__":
-    # source = "lisp.txt"
-    # target = "target.txt"
-    assert len(sys.argv) == 3, "Wrong arguments: translator.py <input_file> <target_file>"
-    _, source, target = sys.argv
+    source = "lisp.txt"
+    target = "target.txt"
+    # assert len(sys.argv) == 3, "Wrong arguments: translator.py <input_file> <target_file>"
+    # _, source, target = sys.argv
     main(source, target)
