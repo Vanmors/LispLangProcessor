@@ -81,25 +81,8 @@ class LispParser:
                     i = new_i - 1
                 else:
                     # Переменная
-                    if tokens[i + 1] == "(":
-                        new_i = self.parse_block(tokens, i + 1)
-                        self.code.append(
-                            {"index": len(self.code) + 1, "opcode": Opcode.LD,
-                             "register": self.registres_var[tokens[i]],
-                             "arg": "R10"})
-                        i = new_i - 1
-                    elif tokens[i + 1].isalpha():
-                        self.code.append(
-                            {"index": len(self.code) + 1, "opcode": Opcode.LD,
-                             "register": self.registres_var[tokens[i]],
-                             "arg": self.registres_var[tokens[i + 1]]})
-                        i = i + 1
-                    elif tokens[i + 1].isdigit():
-                        self.code.append(
-                            {"index": len(self.code) + 1, "opcode": Opcode.LD,
-                             "register": self.registres_var[tokens[i]],
-                             "arg": tokens[i + 1]})
-                        i = i + 1
+                    new_i = self.update_variable(tokens, i)
+                    i = new_i
             i += 1
 
     def parse_arithmetic(self, tokens: list, index: int) -> int:
@@ -220,6 +203,27 @@ class LispParser:
 
         return end_block
 
+    def update_variable(self, tokens: list, start_index: int) -> int:
+        end_block = start_index + 1
+        if tokens[start_index + 1] == "(":
+            new_i = self.parse_block(tokens, start_index + 1)
+            self.code.append(
+                {"index": len(self.code) + 1, "opcode": Opcode.LD,
+                 "register": self.registres_var[tokens[start_index]],
+                 "arg": "R10"})
+            end_block = new_i - 1
+        elif tokens[start_index + 1].isalpha():
+            self.code.append(
+                {"index": len(self.code) + 1, "opcode": Opcode.LD,
+                 "register": self.registres_var[tokens[start_index]],
+                 "arg": self.registres_var[tokens[start_index + 1]]})
+        elif tokens[start_index + 1].isdigit():
+            self.code.append(
+                {"index": len(self.code) + 1, "opcode": Opcode.LD,
+                 "register": self.registres_var[tokens[start_index]],
+                 "arg": tokens[start_index + 1]})
+        return end_block
+
     def parse_block(self, tokens: list, start_index: int) -> int:
         # Находим соответствующую закрывающую скобку
         end_index = self.find_closing_bracket(tokens, start_index)
@@ -250,7 +254,7 @@ class LispParser:
         # Аргументы функции
         args_start_index = start_index + 3
         args_end_index = args_start_index
-        while tokens[args_end_index] != ')':
+        while tokens[args_end_index] != ")":
             args_end_index += 1
 
         args_tokens = tokens[args_start_index:args_end_index]
