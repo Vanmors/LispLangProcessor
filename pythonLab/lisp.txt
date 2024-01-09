@@ -1,0 +1,10 @@
+setq one 1
+    setq two 2
+    setq sum 2
+    setq old 0
+    (loop (< 1000000 two)
+    (old two
+    (two (+ one two))
+    one old)
+    (if (= 0 (/ two 2))
+    (sum (+ sum two))))

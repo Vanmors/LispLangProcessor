@@ -1,0 +1,192 @@
+in_source: |-
+  ((setq hello "hello,")
+  setq myName read_line
+  (print_line hello)
+  print_line myName)
+in_stdin: |-
+  Ivan0
+out_code: |-
+  [{"index": 1, "opcode": "LD", "register": "R1", "arg": 104},
+   {"index": 2, "opcode": "ST", "register": "R1", "name": "hello"},
+   {"index": 3, "opcode": "LD", "register": "R1", "arg": 101},
+   {"index": 4, "opcode": "ST", "register": "R1", "name": "hello"},
+   {"index": 5, "opcode": "LD", "register": "R1", "arg": 108},
+   {"index": 6, "opcode": "ST", "register": "R1", "name": "hello"},
+   {"index": 7, "opcode": "LD", "register": "R1", "arg": 108},
+   {"index": 8, "opcode": "ST", "register": "R1", "name": "hello"},
+   {"index": 9, "opcode": "LD", "register": "R1", "arg": 111},
+   {"index": 10, "opcode": "ST", "register": "R1", "name": "hello"},
+   {"index": 11, "opcode": "LD", "register": "R1", "arg": 44},
+   {"index": 12, "opcode": "ST", "register": "R1", "name": "hello"},
+   {"index": 13, "opcode": "LD", "register": "R1", "arg": 48},
+   {"index": 14, "opcode": "ST", "register": "R1", "name": "hello"},
+   {"index": 15, "opcode": "IN", "register": "R1"},
+   {"index": 16, "opcode": "LD", "register": "R2", "arg": 0},
+   {"index": 17, "opcode": "CMP", "register": "R1", "arg": "R2"},
+   {"index": 18, "opcode": "JG", "arg": 21},
+   {"index": 19, "opcode": "ST", "register": "R1", "name": "myName"},
+   {"index": 20, "opcode": "JMP", "arg": 15},
+   {"index": 21, "opcode": "ST", "register": "R1", "name": "myName"},
+   {"index": 22, "opcode": "LD", "register": "R0", "arg": 0},
+   {"index": 23, "opcode": "LD", "register": "R1", "name": "hello"},
+   {"index": 24, "opcode": "LD", "register": "R2", "arg": 0},
+   {"index": 25, "opcode": "CMP", "register": "R1", "arg": "R2"},
+   {"index": 26, "opcode": "JG", "arg": 30},
+   {"index": 27, "opcode": "OUT", "register": "R1"},
+   {"index": 28, "opcode": "INC", "register": "R0"},
+   {"index": 29, "opcode": "JMP", "arg": 23},
+   {"index": 30, "opcode": "LD", "register": "R0", "arg": 0},
+   {"index": 31, "opcode": "LD", "register": "R1", "name": "myName"},
+   {"index": 32, "opcode": "LD", "register": "R2", "arg": 0},
+   {"index": 33, "opcode": "CMP", "register": "R1", "arg": "R2"},
+   {"index": 34, "opcode": "JG", "arg": 38},
+   {"index": 35, "opcode": "OUT", "register": "R1"},
+   {"index": 36, "opcode": "INC", "register": "R0"},
+   {"index": 37, "opcode": "JMP", "arg": 31},
+   {"index": 38, "opcode": "HLT"}]
+out_stdout: |
+  source LoC: 4 code instr: 38
+  ============================================================
+  hello,Ivan
+  instr_counter:  123 ticks: 123
+out_log: |
+  DEBUG   machine:simulation    TICK:   0 PC:   0 ALU: 0 	LD R1
+  DEBUG   machine:simulation    TICK:   1 PC:   1 ALU: 0 	ST R1 hello
+  DEBUG   machine:simulation    TICK:   2 PC:   2 ALU: 0 	LD R1
+  DEBUG   machine:simulation    TICK:   3 PC:   3 ALU: 0 	ST R1 hello
+  DEBUG   machine:simulation    TICK:   4 PC:   4 ALU: 0 	LD R1
+  DEBUG   machine:simulation    TICK:   5 PC:   5 ALU: 0 	ST R1 hello
+  DEBUG   machine:simulation    TICK:   6 PC:   6 ALU: 0 	LD R1
+  DEBUG   machine:simulation    TICK:   7 PC:   7 ALU: 0 	ST R1 hello
+  DEBUG   machine:simulation    TICK:   8 PC:   8 ALU: 0 	LD R1
+  DEBUG   machine:simulation    TICK:   9 PC:   9 ALU: 0 	ST R1 hello
+  DEBUG   machine:simulation    TICK:  10 PC:  10 ALU: 0 	LD R1
+  DEBUG   machine:simulation    TICK:  11 PC:  11 ALU: 0 	ST R1 hello
+  DEBUG   machine:simulation    TICK:  12 PC:  12 ALU: 0 	LD R1
+  DEBUG   machine:simulation    TICK:  13 PC:  13 ALU: 0 	ST R1 hello
+  DEBUG   machine:simulation    TICK:  14 PC:  14 ALU: 0 	IN R1
+  DEBUG   machine:signal_input  input: 'I'
+  DEBUG   machine:simulation    TICK:  15 PC:  15 ALU: 0 	LD R2
+  DEBUG   machine:simulation    TICK:  16 PC:  16 ALU: 0 	CMP R1
+  DEBUG   machine:simulation    TICK:  17 PC:  17 ALU: 73 	JG
+  DEBUG   machine:simulation    TICK:  18 PC:  18 ALU: 73 	ST R1 myName
+  DEBUG   machine:simulation    TICK:  19 PC:  19 ALU: 73 	JMP
+  DEBUG   machine:simulation    TICK:  20 PC:  14 ALU: 73 	IN R1
+  DEBUG   machine:signal_input  input: 'v'
+  DEBUG   machine:simulation    TICK:  21 PC:  15 ALU: 73 	LD R2
+  DEBUG   machine:simulation    TICK:  22 PC:  16 ALU: 73 	CMP R1
+  DEBUG   machine:simulation    TICK:  23 PC:  17 ALU: 118 	JG
+  DEBUG   machine:simulation    TICK:  24 PC:  18 ALU: 118 	ST R1 myName
+  DEBUG   machine:simulation    TICK:  25 PC:  19 ALU: 118 	JMP
+  DEBUG   machine:simulation    TICK:  26 PC:  14 ALU: 118 	IN R1
+  DEBUG   machine:signal_input  input: 'a'
+  DEBUG   machine:simulation    TICK:  27 PC:  15 ALU: 118 	LD R2
+  DEBUG   machine:simulation    TICK:  28 PC:  16 ALU: 118 	CMP R1
+  DEBUG   machine:simulation    TICK:  29 PC:  17 ALU: 97 	JG
+  DEBUG   machine:simulation    TICK:  30 PC:  18 ALU: 97 	ST R1 myName
+  DEBUG   machine:simulation    TICK:  31 PC:  19 ALU: 97 	JMP
+  DEBUG   machine:simulation    TICK:  32 PC:  14 ALU: 97 	IN R1
+  DEBUG   machine:signal_input  input: 'n'
+  DEBUG   machine:simulation    TICK:  33 PC:  15 ALU: 97 	LD R2
+  DEBUG   machine:simulation    TICK:  34 PC:  16 ALU: 97 	CMP R1
+  DEBUG   machine:simulation    TICK:  35 PC:  17 ALU: 110 	JG
+  DEBUG   machine:simulation    TICK:  36 PC:  18 ALU: 110 	ST R1 myName
+  DEBUG   machine:simulation    TICK:  37 PC:  19 ALU: 110 	JMP
+  DEBUG   machine:simulation    TICK:  38 PC:  14 ALU: 110 	IN R1
+  DEBUG   machine:signal_input  input: '0'
+  DEBUG   machine:simulation    TICK:  39 PC:  15 ALU: 110 	LD R2
+  DEBUG   machine:simulation    TICK:  40 PC:  16 ALU: 110 	CMP R1
+  DEBUG   machine:simulation    TICK:  41 PC:  17 ALU: 48 	JG
+  DEBUG   machine:simulation    TICK:  42 PC:  20 ALU: 48 	ST R1 myName
+  DEBUG   machine:simulation    TICK:  43 PC:  21 ALU: 48 	LD R0
+  DEBUG   machine:simulation    TICK:  44 PC:  22 ALU: 48 	LD R1 hello
+  DEBUG   machine:simulation    TICK:  45 PC:  23 ALU: 48 	LD R2
+  DEBUG   machine:simulation    TICK:  46 PC:  24 ALU: 48 	CMP R1
+  DEBUG   machine:simulation    TICK:  47 PC:  25 ALU: 104 	JG
+  DEBUG   machine:simulation    TICK:  48 PC:  26 ALU: 104 	OUT R1
+  DEBUG   machine:signal_output output: '' << 'h'
+  DEBUG   machine:simulation    TICK:  49 PC:  27 ALU: 104 	INC R0
+  DEBUG   machine:simulation    TICK:  50 PC:  28 ALU: 1 	JMP
+  DEBUG   machine:simulation    TICK:  51 PC:  22 ALU: 1 	LD R1 hello
+  DEBUG   machine:simulation    TICK:  52 PC:  23 ALU: 1 	LD R2
+  DEBUG   machine:simulation    TICK:  53 PC:  24 ALU: 1 	CMP R1
+  DEBUG   machine:simulation    TICK:  54 PC:  25 ALU: 101 	JG
+  DEBUG   machine:simulation    TICK:  55 PC:  26 ALU: 101 	OUT R1
+  DEBUG   machine:signal_output output: 'h' << 'e'
+  DEBUG   machine:simulation    TICK:  56 PC:  27 ALU: 101 	INC R0
+  DEBUG   machine:simulation    TICK:  57 PC:  28 ALU: 1 	JMP
+  DEBUG   machine:simulation    TICK:  58 PC:  22 ALU: 1 	LD R1 hello
+  DEBUG   machine:simulation    TICK:  59 PC:  23 ALU: 1 	LD R2
+  DEBUG   machine:simulation    TICK:  60 PC:  24 ALU: 1 	CMP R1
+  DEBUG   machine:simulation    TICK:  61 PC:  25 ALU: 108 	JG
+  DEBUG   machine:simulation    TICK:  62 PC:  26 ALU: 108 	OUT R1
+  DEBUG   machine:signal_output output: 'he' << 'l'
+  DEBUG   machine:simulation    TICK:  63 PC:  27 ALU: 108 	INC R0
+  DEBUG   machine:simulation    TICK:  64 PC:  28 ALU: 1 	JMP
+  DEBUG   machine:simulation    TICK:  65 PC:  22 ALU: 1 	LD R1 hello
+  DEBUG   machine:simulation    TICK:  66 PC:  23 ALU: 1 	LD R2
+  DEBUG   machine:simulation    TICK:  67 PC:  24 ALU: 1 	CMP R1
+  DEBUG   machine:simulation    TICK:  68 PC:  25 ALU: 108 	JG
+  DEBUG   machine:simulation    TICK:  69 PC:  26 ALU: 108 	OUT R1
+  DEBUG   machine:signal_output output: 'hel' << 'l'
+  DEBUG   machine:simulation    TICK:  70 PC:  27 ALU: 108 	INC R0
+  DEBUG   machine:simulation    TICK:  71 PC:  28 ALU: 1 	JMP
+  DEBUG   machine:simulation    TICK:  72 PC:  22 ALU: 1 	LD R1 hello
+  DEBUG   machine:simulation    TICK:  73 PC:  23 ALU: 1 	LD R2
+  DEBUG   machine:simulation    TICK:  74 PC:  24 ALU: 1 	CMP R1
+  DEBUG   machine:simulation    TICK:  75 PC:  25 ALU: 111 	JG
+  DEBUG   machine:simulation    TICK:  76 PC:  26 ALU: 111 	OUT R1
+  DEBUG   machine:signal_output output: 'hell' << 'o'
+  DEBUG   machine:simulation    TICK:  77 PC:  27 ALU: 111 	INC R0
+  DEBUG   machine:simulation    TICK:  78 PC:  28 ALU: 1 	JMP
+  DEBUG   machine:simulation    TICK:  79 PC:  22 ALU: 1 	LD R1 hello
+  DEBUG   machine:simulation    TICK:  80 PC:  23 ALU: 1 	LD R2
+  DEBUG   machine:simulation    TICK:  81 PC:  24 ALU: 1 	CMP R1
+  DEBUG   machine:simulation    TICK:  82 PC:  25 ALU: 44 	JG
+  DEBUG   machine:simulation    TICK:  83 PC:  26 ALU: 44 	OUT R1
+  DEBUG   machine:signal_output output: 'hello' << ','
+  DEBUG   machine:simulation    TICK:  84 PC:  27 ALU: 44 	INC R0
+  DEBUG   machine:simulation    TICK:  85 PC:  28 ALU: 1 	JMP
+  DEBUG   machine:simulation    TICK:  86 PC:  22 ALU: 1 	LD R1 hello
+  DEBUG   machine:simulation    TICK:  87 PC:  23 ALU: 1 	LD R2
+  DEBUG   machine:simulation    TICK:  88 PC:  24 ALU: 1 	CMP R1
+  DEBUG   machine:simulation    TICK:  89 PC:  25 ALU: 48 	JG
+  DEBUG   machine:simulation    TICK:  90 PC:  29 ALU: 48 	LD R0
+  DEBUG   machine:simulation    TICK:  91 PC:  30 ALU: 48 	LD R1 myName
+  DEBUG   machine:simulation    TICK:  92 PC:  31 ALU: 48 	LD R2
+  DEBUG   machine:simulation    TICK:  93 PC:  32 ALU: 48 	CMP R1
+  DEBUG   machine:simulation    TICK:  94 PC:  33 ALU: 73 	JG
+  DEBUG   machine:simulation    TICK:  95 PC:  34 ALU: 73 	OUT R1
+  DEBUG   machine:signal_output output: 'hello,' << 'I'
+  DEBUG   machine:simulation    TICK:  96 PC:  35 ALU: 73 	INC R0
+  DEBUG   machine:simulation    TICK:  97 PC:  36 ALU: 1 	JMP
+  DEBUG   machine:simulation    TICK:  98 PC:  30 ALU: 1 	LD R1 myName
+  DEBUG   machine:simulation    TICK:  99 PC:  31 ALU: 1 	LD R2
+  DEBUG   machine:simulation    TICK: 100 PC:  32 ALU: 1 	CMP R1
+  DEBUG   machine:simulation    TICK: 101 PC:  33 ALU: 118 	JG
+  DEBUG   machine:simulation    TICK: 102 PC:  34 ALU: 118 	OUT R1
+  DEBUG   machine:signal_output output: 'hello,I' << 'v'
+  DEBUG   machine:simulation    TICK: 103 PC:  35 ALU: 118 	INC R0
+  DEBUG   machine:simulation    TICK: 104 PC:  36 ALU: 1 	JMP
+  DEBUG   machine:simulation    TICK: 105 PC:  30 ALU: 1 	LD R1 myName
+  DEBUG   machine:simulation    TICK: 106 PC:  31 ALU: 1 	LD R2
+  DEBUG   machine:simulation    TICK: 107 PC:  32 ALU: 1 	CMP R1
+  DEBUG   machine:simulation    TICK: 108 PC:  33 ALU: 97 	JG
+  DEBUG   machine:simulation    TICK: 109 PC:  34 ALU: 97 	OUT R1
+  DEBUG   machine:signal_output output: 'hello,Iv' << 'a'
+  DEBUG   machine:simulation    TICK: 110 PC:  35 ALU: 97 	INC R0
+  DEBUG   machine:simulation    TICK: 111 PC:  36 ALU: 1 	JMP
+  DEBUG   machine:simulation    TICK: 112 PC:  30 ALU: 1 	LD R1 myName
+  DEBUG   machine:simulation    TICK: 113 PC:  31 ALU: 1 	LD R2
+  DEBUG   machine:simulation    TICK: 114 PC:  32 ALU: 1 	CMP R1
+  DEBUG   machine:simulation    TICK: 115 PC:  33 ALU: 110 	JG
+  DEBUG   machine:simulation    TICK: 116 PC:  34 ALU: 110 	OUT R1
+  DEBUG   machine:signal_output output: 'hello,Iva' << 'n'
+  DEBUG   machine:simulation    TICK: 117 PC:  35 ALU: 110 	INC R0
+  DEBUG   machine:simulation    TICK: 118 PC:  36 ALU: 1 	JMP
+  DEBUG   machine:simulation    TICK: 119 PC:  30 ALU: 1 	LD R1 myName
+  DEBUG   machine:simulation    TICK: 120 PC:  31 ALU: 1 	LD R2
+  DEBUG   machine:simulation    TICK: 121 PC:  32 ALU: 1 	CMP R1
+  DEBUG   machine:simulation    TICK: 122 PC:  33 ALU: 48 	JG
+  DEBUG   machine:simulation    TICK: 123 PC:  37 ALU: 48 	HLT
+  INFO    machine:simulation    output_buffer: 'hello,Ivan'

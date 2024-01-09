@@ -1,0 +1,59 @@
+in_source: |-
+  (read_char a
+    (loop (> a 0) (print_char a) (read_char a)))
+in_stdin: |-
+  Ivan0
+out_code: |-
+  [{"index": 1, "opcode": "IN", "register": "R1", "name": "a"},
+   {"index": 2, "opcode": "LD", "register": "R2", "arg": 0},
+   {"index": 3, "opcode": "CMP", "register": "R1", "arg": "R2"},
+   {"index": 4, "opcode": "JG", "arg": 8},
+   {"index": 5, "opcode": "OUT", "register": "R1"},
+   {"index": 6, "opcode": "IN", "register": "R1", "name": "a"},
+   {"index": 7, "opcode": "JMP", "arg": 2},
+   {"index": 8, "opcode": "HLT"}]
+out_stdout: |
+  source LoC: 2 code instr: 8
+  ============================================================
+  Ivan
+  instr_counter:  28 ticks: 28
+out_log: |
+  DEBUG   machine:simulation    TICK:   0 PC:   0 ALU: 0 	IN R1 a
+  DEBUG   machine:signal_input  input: 'I'
+  DEBUG   machine:simulation    TICK:   1 PC:   1 ALU: 0 	LD R2
+  DEBUG   machine:simulation    TICK:   2 PC:   2 ALU: 0 	CMP R1
+  DEBUG   machine:simulation    TICK:   3 PC:   3 ALU: 73 	JG
+  DEBUG   machine:simulation    TICK:   4 PC:   4 ALU: 73 	OUT R1
+  DEBUG   machine:signal_output output: '' << 'I'
+  DEBUG   machine:simulation    TICK:   5 PC:   5 ALU: 73 	IN R1 a
+  DEBUG   machine:signal_input  input: 'v'
+  DEBUG   machine:simulation    TICK:   6 PC:   6 ALU: 73 	JMP
+  DEBUG   machine:simulation    TICK:   7 PC:   1 ALU: 73 	LD R2
+  DEBUG   machine:simulation    TICK:   8 PC:   2 ALU: 73 	CMP R1
+  DEBUG   machine:simulation    TICK:   9 PC:   3 ALU: 118 	JG
+  DEBUG   machine:simulation    TICK:  10 PC:   4 ALU: 118 	OUT R1
+  DEBUG   machine:signal_output output: 'I' << 'v'
+  DEBUG   machine:simulation    TICK:  11 PC:   5 ALU: 118 	IN R1 a
+  DEBUG   machine:signal_input  input: 'a'
+  DEBUG   machine:simulation    TICK:  12 PC:   6 ALU: 118 	JMP
+  DEBUG   machine:simulation    TICK:  13 PC:   1 ALU: 118 	LD R2
+  DEBUG   machine:simulation    TICK:  14 PC:   2 ALU: 118 	CMP R1
+  DEBUG   machine:simulation    TICK:  15 PC:   3 ALU: 97 	JG
+  DEBUG   machine:simulation    TICK:  16 PC:   4 ALU: 97 	OUT R1
+  DEBUG   machine:signal_output output: 'Iv' << 'a'
+  DEBUG   machine:simulation    TICK:  17 PC:   5 ALU: 97 	IN R1 a
+  DEBUG   machine:signal_input  input: 'n'
+  DEBUG   machine:simulation    TICK:  18 PC:   6 ALU: 97 	JMP
+  DEBUG   machine:simulation    TICK:  19 PC:   1 ALU: 97 	LD R2
+  DEBUG   machine:simulation    TICK:  20 PC:   2 ALU: 97 	CMP R1
+  DEBUG   machine:simulation    TICK:  21 PC:   3 ALU: 110 	JG
+  DEBUG   machine:simulation    TICK:  22 PC:   4 ALU: 110 	OUT R1
+  DEBUG   machine:signal_output output: 'Iva' << 'n'
+  DEBUG   machine:simulation    TICK:  23 PC:   5 ALU: 110 	IN R1 a
+  DEBUG   machine:signal_input  input: '0'
+  DEBUG   machine:simulation    TICK:  24 PC:   6 ALU: 110 	JMP
+  DEBUG   machine:simulation    TICK:  25 PC:   1 ALU: 110 	LD R2
+  DEBUG   machine:simulation    TICK:  26 PC:   2 ALU: 110 	CMP R1
+  DEBUG   machine:simulation    TICK:  27 PC:   3 ALU: 48 	JG
+  DEBUG   machine:simulation    TICK:  28 PC:   7 ALU: 48 	HLT
+  INFO    machine:simulation    output_buffer: 'Ivan'
