@@ -26,25 +26,19 @@ class LispParser:
         self.registres_val.allocate_register("R9")
         self.registres_val.allocate_register("R10")
 
-        tokens = expression.replace('(', ' ( ').replace(')', ' ) ').split()
-
+        tokens = expression.replace("(", " ( ").replace(")", " ) ").split()
         self.parse_tokens(tokens)
 
         self.code.append({"index": len(self.code) + 1, "opcode": Opcode.HLT})
 
-    def parse_tokens(self, tokens):
+    def parse_tokens(self, tokens: list):
         i = 0
         while i < len(tokens):
             token = tokens[i]
-            if token == '(':
+            if token == "(":
                 # Начало нового блока
                 new_i = self.parse_block(tokens, i)
                 i = new_i - 1
-            # elif token.isdigit() or (token[0] == '-' and token[1:].isdigit()):
-            #     # Число
-            #     self.code.append(
-            #         {"index": len(self.code) + 1, "opcode": Opcode.LD, "register": f"R{len(self.code) + 1}",
-            #          "arg": int(token)})
             elif token == "setq":
                 new_i = self.create_variable(tokens, i)
                 i = new_i
@@ -64,7 +58,7 @@ class LispParser:
                 # Ввод
                 new_i = self.parse_read_char(tokens, i)
                 i = new_i
-            elif token in ('+', '-', '*', '/', '>', '<', '='):
+            elif token in ("+", "-", "*", "/", ">", "<", "="):
                 # Арифметическая операция
                 new_i = self.parse_arithmetic(tokens, i)
                 i = new_i - 1
@@ -80,14 +74,14 @@ class LispParser:
                 i = new_i
             elif token.isalpha():
                 # Переменная или вызов функции
-                if i + 1 < len(tokens) and tokens[i + 1] == '(' and (
-                        tokens[i + 2].isalpha() or tokens[i + 2].isalpha() == ')'):
+                if i + 1 < len(tokens) and tokens[i + 1] == "(" and (
+                        tokens[i + 2].isalpha() or tokens[i + 2].isalpha() == ")"):
                     # Функция
                     new_i = self.parse_function_call(tokens, i)
                     i = new_i - 1
                 else:
                     # Переменная
-                    if tokens[i + 1] == '(':
+                    if tokens[i + 1] == "(":
                         new_i = self.parse_block(tokens, i + 1)
                         self.code.append(
                             {"index": len(self.code) + 1, "opcode": Opcode.LD,
@@ -108,7 +102,7 @@ class LispParser:
                         i = i + 1
             i += 1
 
-    def parse_arithmetic(self, tokens, index):
+    def parse_arithmetic(self, tokens: list, index: int) -> int:
         # Арифметическое выражение
         arg1 = 0
         arg2 = 0
@@ -146,39 +140,39 @@ class LispParser:
         number = self.registres_val.get_free_register()
         self.registres_val.put_in_register(number, 0)
 
-        if operator == '+':
+        if operator == "+":
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.ADD, "register": number,
                               "arg": [arg1, arg2]})
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10",
                               "arg": number})
-        elif operator == '-':
+        elif operator == "-":
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.SUB, "register": number,
                               "arg": [arg1, arg2]})
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10",
                               "arg": number})
-        elif operator == '*':
+        elif operator == "*":
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.MUL, "register": number,
                               "arg": [arg1, arg2]})
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10",
                               "arg": number})
-        elif operator == '/':
+        elif operator == "/":
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.DIV, "register": number,
                               "arg": [arg1, arg2]})
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10",
                               "arg": number})
-        elif operator == '>':
+        elif operator == ">":
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.CMP, "register": arg1,
                               "arg": arg2})
             self.code.append(
                 {"index": len(self.code) + 1, "opcode": Opcode.JG, "arg": 0})
             self.stack.append(len(self.code))
-        elif operator == '<':
+        elif operator == "<":
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.CMP, "register": arg1,
                               "arg": arg2})
             self.code.append(
                 {"index": len(self.code) + 1, "opcode": Opcode.JL, "arg": 0})
             self.stack.append(len(self.code))
-        elif operator == '=':
+        elif operator == "=":
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.CMP, "register": arg1,
                               "arg": arg2})
             self.code.append(
@@ -189,7 +183,7 @@ class LispParser:
         self.registres_val.clean_register(number)
         return args_end_index
 
-    def create_variable(self, tokens, start_index):
+    def create_variable(self, tokens: list, start_index: int) -> int:
         start_value = start_index + 2
         end_block = start_index + 1
         if (tokens[start_value][0] == '"'):
@@ -211,7 +205,7 @@ class LispParser:
                  "name": tokens[start_index + 1]})
             self.registres_val.clean_register(number)
             end_block = start_index + 2
-        elif tokens[start_index + 2] == '(':
+        elif tokens[start_index + 2] == "(":
             condition_index = start_index + 1
             end_block = self.find_closing_bracket(tokens, condition_index)
             self.parse_tokens(tokens[condition_index:end_block])
@@ -226,23 +220,22 @@ class LispParser:
 
         return end_block
 
-    def parse_block(self, tokens, start_index):
+    def parse_block(self, tokens: list, start_index: int) -> int:
         # Находим соответствующую закрывающую скобку
         end_index = self.find_closing_bracket(tokens, start_index)
 
         # Рекурсивно обрабатываем внутренний блок
         inner_tokens = tokens[start_index + 1:end_index]
-        # inner_tokens = tokens[start_index:end_index]
         self.parse_tokens(inner_tokens)
         return end_index
 
-    def find_closing_bracket(self, tokens, start_index):
+    def find_closing_bracket(self, tokens: list, start_index: int) -> int:
         depth = 1
         i = start_index
         for i in range(start_index, len(tokens)):
-            if tokens[i] == '(':
+            if tokens[i] == "(":
                 depth += 1
-            elif tokens[i] == ')':
+            elif tokens[i] == ")":
                 depth -= 1
                 if depth == 0:
                     return i
@@ -250,14 +243,14 @@ class LispParser:
             return i + 1
         raise ValueError("Unbalanced brackets.")
 
-    def parse_function_create(self, tokens, start_index):
+    def parse_function_create(self, tokens: list, start_index: int) -> int:
         # Имя функции
         function_name = tokens[start_index + 1]
 
         # Аргументы функции
         args_start_index = start_index + 3
         args_end_index = args_start_index
-        while (tokens[args_end_index] != ')'):
+        while tokens[args_end_index] != ')':
             args_end_index += 1
 
         args_tokens = tokens[args_start_index:args_end_index]
@@ -273,11 +266,11 @@ class LispParser:
         self.code.append({"index": len(self.code) + 1, "opcode": "LABEL", "label": end_label})
         return end_block
 
-    def parse_function_call(self, token, start_index):
+    def parse_function_call(self, token: list, start_index: int):
         self.code.append({"index": len(self.code) + 1, "opcode": Opcode.CALL, "label": token[start_index]})
         return start_index + 2
 
-    def parse_if(self, tokens, if_index):
+    def parse_if(self, tokens: list, if_index: int) -> int:
         # Условие
         condition_index = if_index + 2
         end_block = self.find_closing_bracket(tokens, condition_index)
@@ -291,7 +284,7 @@ class LispParser:
         self.code[self.stack.pop() - 1]["arg"] = len(self.code) + 1
         return end_block
 
-    def parse_loop(self, tokens, loop_index):
+    def parse_loop(self, tokens: list, loop_index: int) -> int:
         start_index = len(self.code) + 1
         # Условие
         condition_index = loop_index + 2
@@ -302,26 +295,19 @@ class LispParser:
         loop_body_index = condition_index + 4
         end_block = self.parse_block(tokens, loop_body_index)
 
-        # Метка возврата к условию цикла
-        loop_start_label = f"start_block{self.label_index}"
-        # self.label_index += 1
-        # self.code.append({"index": len(self.code) + 1, "opcode": Opcode.JMP, "label": loop_start_label})
-
         # Метка конца блока
-        end_label = f"end_block{self.label_index}"
         self.label_index += 1
         self.code.append({"index": len(self.code) + 1, "opcode": Opcode.JMP, "arg": start_index})
-        # print(self.stack.pop() - 1)
         self.code[self.stack.pop() - 1]["arg"] = len(self.code) + 1
         return end_block
 
-    def parse_print_char(self, tokens, print_index):
+    def parse_print_char(self, tokens: list, print_index: int):
         number_register = self.registres_var[tokens[print_index + 1]]
         self.code.append({"index": len(self.code) + 1, "opcode": Opcode.OUT, "register": number_register})
         self.registres_val.clean_register(number_register)
         return print_index + 2
 
-    def parse_read_char(self, tokens, read_index):
+    def parse_read_char(self, tokens: list, read_index: int):
         number = self.registres_val.get_free_register()
         self.registres_var[tokens[read_index + 1]] = number
         self.code.append({"index": len(self.code) + 1, "opcode": Opcode.IN, "register": number,
@@ -329,7 +315,7 @@ class LispParser:
         self.registres_val.put_in_register(number, 0)
         return read_index + 2
 
-    def parse_read_line(self, tokens, read_index):
+    def parse_read_line(self, tokens: list, read_index: int) -> int:
         number = self.registres_val.get_free_register()
         start_index = len(self.code) + 1
         self.registres_var[tokens[read_index - 1]] = number
@@ -357,7 +343,7 @@ class LispParser:
         self.registres_val.clean_register(number2)
         return read_index + 1
 
-    def parse_print_line(self, tokens, print_index):
+    def parse_print_line(self, tokens: list, print_index: int) -> int:
         self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": f"R0",
                           "arg": 0})
         start_index = len(self.code) + 1

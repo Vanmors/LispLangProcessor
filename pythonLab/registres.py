@@ -6,16 +6,16 @@ class Registres:
         if reg_name:
             self.registers[reg_name] = None
 
-    def get_register(self, variable_name):
+    def get_register(self, variable_name: str):
         return self.registers.get(variable_name)
 
-    def get_free_register(self):
+    def get_free_register(self) -> str:
         for i in range(len(self.registers)):
-            if self.registers[f"R{i + 1}"] == None:
+            if self.registers[f"R{i + 1}"] is None:
                 return f"R{i + 1}"
-        return -1
+        return ""
 
-    def put_in_register(self, register, value):
+    def put_in_register(self, register: str, value: int):
         self.registers[register] = value
 
     def clean_register(self, register):

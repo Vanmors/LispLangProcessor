@@ -21,17 +21,6 @@ class Opcode(Enum):
     JE: str = "JE"
     JL: str = "JL"
 
-    @staticmethod
-    def getOp(operation: str):
-        if operation == '*':
-            return Opcode.MUL
-        elif operation == '-':
-            return Opcode.SUB
-        elif operation == '+':
-            return Opcode.ADD
-        elif operation == '/':
-            return Opcode.DIV
-
     def __str__(self) -> str:
         return self.value
 
@@ -43,18 +32,15 @@ class OpcodeEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-def write_code(filename, code):
+def write_code(filename: str, code: list):
     with open(filename, "w", encoding="utf-8") as file:
-        # Почему не: `file.write(json.dumps(code, indent=4))`?
-        # Чтобы одна инструкция была на одну строку.
         buf = []
         for instr in code:
             buf.append(json.dumps(instr, cls=OpcodeEncoder))
         file.write("[" + ",\n ".join(buf) + "]")
 
 
-def read_code(filename):
-
+def read_code(filename: str) -> list:
     with open(filename, encoding="utf-8") as file:
         code = json.loads(file.read())
 

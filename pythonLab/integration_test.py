@@ -2,11 +2,9 @@ import contextlib
 import io
 import logging
 import os
-import tempfile
-
-import pytest
-
 import machine
+import pytest
+import tempfile
 import translator
 
 
@@ -42,5 +40,4 @@ def test_translator_and_machine(golden, caplog):
         # Проверяем, что ожидания соответствуют реальности.
         assert code == golden.out["out_code"]
         assert stdout.getvalue() == golden.out["out_stdout"]
-        # print(caplog.text)
         assert caplog.text == golden.out["out_log"]

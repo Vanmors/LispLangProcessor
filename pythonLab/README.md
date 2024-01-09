@@ -125,11 +125,12 @@ HLT - оставновка программы
 
 ## Тестирование
 
-В качестве тестов использовано 3 алгоритма:
+В качестве тестов использовано 4 алгоритма:
 
 1. golden/cat.yml - повторяет ввод на выводе
 2. golden/cat.yml - считывает имя и выводит приветствие `hello,name`
-3. golden/prob2.yml - проблема 2 Эйлера
+3. golden/hello.yml - записывает `hello` в переменную и вывод её
+4. golden/prob2.yml - проблема 2 Эйлера
 
 CI:
 ```yaml
@@ -261,5 +262,5 @@ jobs:
 ```text
 | Мориков Иван Дмитриевич | hello_user | 4         | -             | 38         | 123      | 123     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline 
 | Мориков Иван Дмитриевич | cat        | 2         | -             | 8          | 28       | 28      lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
-| Мориков Иван Дмитриевич | prob2      | 10        | -            | 23        | 427      | 427     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
+| Мориков Иван Дмитриевич | prob2      | 10        | -             | 23         | 427      | 427     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
 ```

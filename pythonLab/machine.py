@@ -5,14 +5,8 @@ from isa import Opcode, read_code
 
 
 class DataPath:
-    data_memory_size = None
-    "Размер памяти данных."
-
     memory = None
     "Память данных. Инициализируется нулевыми значениями."
-
-    data_address = None
-    "Адрес в памяти данных. Инициализируется нулём."
 
     alu = None
     "ALU. Инициализируется нулём."
@@ -28,7 +22,7 @@ class DataPath:
     comparator = None
 
     def __init__(self, memory_size, input_buffer):
-        assert memory_size > 0, "Data_memory size should be non-zero"
+        assert memory_size > 0
         self.memory = []
         self.alu = 0
         self.registers = {}
@@ -136,7 +130,7 @@ class ControlUnit:
         else:
             instr = self.data_path.memory[self.program_counter]
             # assert "arg" in instr, "internal error"
-            # self.program_counter = instr["arg"] - 1
+            self.program_counter = instr["arg"] - 1
 
     def decode_and_execute_control_flow_instruction(self, instr, opcode):
         """Декодировать и выполнить инструкцию управления потоком исполнения. В
@@ -152,20 +146,16 @@ class ControlUnit:
 
             return True
         if opcode is Opcode.JG:
-            addr = instr["arg"] - 1
 
             if self.data_path.zero():
-                self.program_counter = addr
                 self.signal_latch_program_counter(sel_next=False)
             else:
                 self.signal_latch_program_counter(sel_next=True)
             self.tick()
 
         if opcode is Opcode.JL:
-            addr = instr["arg"] - 1
 
             if self.data_path.get_comparator() == 2:
-                self.program_counter = addr
                 self.signal_latch_program_counter(sel_next=False)
             else:
                 self.signal_latch_program_counter(sel_next=True)
@@ -173,10 +163,8 @@ class ControlUnit:
 
             return True
         if opcode is Opcode.JE:
-            addr = instr["arg"] - 1
 
             if self.data_path.get_comparator() != 0:
-                self.program_counter = addr
                 self.signal_latch_program_counter(sel_next=False)
             else:
                 self.signal_latch_program_counter(sel_next=True)
@@ -279,9 +267,6 @@ def simulation(code, input_tokens, memory_size, limit):
     return "".join(data_path.output_buffer), instr_counter, control_unit.current_tick()
 
 def main(code_file, input_file):
-    """Функция запуска модели процессора. Параметры -- имена файлов с машинным
-    кодом и с входными данными для симуляции.
-    """
     codes = read_code(code_file)
     # for code in codes:
     #     print(code)
