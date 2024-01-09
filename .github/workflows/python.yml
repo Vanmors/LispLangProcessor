@@ -3,13 +3,13 @@ name: Translator Model Python CI
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - ".github/workflows/*"
       - "pythonLab/**"
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - ".github/workflows/*"
       - "pythonLab/**"
