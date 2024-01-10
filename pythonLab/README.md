@@ -13,15 +13,11 @@ lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipelin
 
 <atom>         ::= <number> | <symbol>
 
-<number>       ::= <integer> | <float>
+<number>       ::= <integer>
 
 <integer>      ::= <digit>+
 
-<float>        ::= <digit>+ '.' <digit>+
-
 <digit>        ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-
-<symbol>       ::= <letter> <symbol-char>*
 
 <letter>       ::= 'A' | 'B' | ... | 'Z' | 'a' | 'b' | ... | 'z'
 
@@ -36,6 +32,7 @@ lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipelin
 * `setq` - инициализация переменной.
 * `print_char` - выводит символ с кодом, равным значению выражения, возвращает код символа.
 * `print_string` - выводит строку, равную значению выражения, возвращает выведенную строку.
+* `print_int` - выводит число
 * вызов функции - вызывает код функции.
 * идентификаторы - возвращают регистр в которой лежит значение переменной.
 
@@ -262,5 +259,5 @@ jobs:
 ```text
 | Мориков Иван Дмитриевич | hello_user | 4         | -             | 38         | 123      | 123     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline 
 | Мориков Иван Дмитриевич | cat        | 2         | -             | 8          | 28       | 28      lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
-| Мориков Иван Дмитриевич | prob2      | 10        | -             | 23         | 427      | 427     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
+| Мориков Иван Дмитриевич | prob2      | 11        | -             | 24         | 455      | 455     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
 ```

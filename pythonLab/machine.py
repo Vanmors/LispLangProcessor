@@ -49,9 +49,9 @@ class DataPath:
     def sum_alu(self, register1, register2):
         self.alu = self.registers[register1] + self.registers[register2]
 
-    def signal_output(self, register, type):
+    def signal_output(self, register, type_arg):
         value = self.registers[register]
-        if type == "value":
+        if type_arg == "value":
             logging.debug("output: %s << %s", repr("".join(self.output_buffer)), repr(str(value)))
             self.output_buffer.append(str(value))
         else:
@@ -78,7 +78,6 @@ class DataPath:
 
     def signal_input(self, register):
         if len(self.input_buffer) == 0:
-            # raise EOFError()
             self.latch_register_input(register, 0)
             self.set_alu(register)
             return
@@ -96,6 +95,7 @@ class DataPath:
             self.comparator = 1
         else:
             self.comparator = 2
+
     def get_comparator(self):
         return self.comparator
 
@@ -107,6 +107,7 @@ class DataPath:
 
     def mod_alu(self, register1, register2, register_out):
         self.registers[register_out] = self.registers[register1] % self.registers[register2]
+
 
 class ControlUnit:
     program_counter = None
@@ -156,7 +157,6 @@ class ControlUnit:
 
             return True
         if opcode is Opcode.JG:
-
             if self.data_path.get_comparator() == 1:
                 self.signal_latch_program_counter(sel_next=True)
             else:
@@ -164,7 +164,6 @@ class ControlUnit:
             self.tick()
 
         if opcode is Opcode.JL:
-
             if self.data_path.get_comparator() == 2:
                 self.signal_latch_program_counter(sel_next=True)
             else:
@@ -173,7 +172,6 @@ class ControlUnit:
 
             return True
         if opcode is Opcode.JE:
-
             if self.data_path.get_comparator() == 0:
                 self.signal_latch_program_counter(sel_next=True)
             else:
@@ -286,8 +284,7 @@ def simulation(code, input_tokens, memory_size, limit):
 
 def main(code_file, input_file):
     codes = read_code(code_file)
-    # for code in codes:
-    #     print(code)
+
     with open(input_file, encoding="utf-8") as file:
         input_text = file.read()
         input_token = []
@@ -305,8 +302,6 @@ def main(code_file, input_file):
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.DEBUG)
-    code_file = "target.txt"
-    input_file = "input_text.txt"
-    # assert len(sys.argv) == 3, "Wrong arguments: machine.py <code_file> <input_file>"
-    # _, code_file, input_file = sys.argv
+    assert len(sys.argv) == 3, "Wrong arguments: machine.py <code_file> <input_file>"
+    _, code_file, input_file = sys.argv
     main(code_file, input_file)
