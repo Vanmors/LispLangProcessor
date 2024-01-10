@@ -33,7 +33,7 @@ class DataPath:
 
     def latch_register_memory(self, register: str, name: str):
         for instruction in self.memory:
-            if type(instruction) != int and name in instruction:
+            if not isinstance(instruction, int) and name in instruction:
                 self.registers[register] = self.memory[instruction[name] + self.registers["R0"]]
 
     def increment(self, register: str):
@@ -41,7 +41,7 @@ class DataPath:
         self.registers[register] += self.alu
 
     def latch_register_input(self, register: str, value: int):
-        if type(value) == int:
+        if isinstance(value, int):
             self.registers[register] = value
         else:
             self.registers[register] = self.registers[value]
@@ -64,7 +64,7 @@ class DataPath:
 
     def save_to_mem(self, name: str, register: str):
         for instruction in self.memory:
-            if type(instruction) != int and name in instruction:
+            if not isinstance(instruction, int) and name in instruction:
                 self.memory.append(self.registers[register])
                 return
         self.memory.append({name: len(self.memory) + 1})
@@ -107,6 +107,12 @@ class DataPath:
 
     def mod_alu(self, register1: str, register2: str, register_out: str):
         self.registers[register_out] = self.registers[register1] % self.registers[register2]
+
+    def sub_alu(self, register1: str, register2: str, register_out: str):
+        self.registers[register_out] = self.registers[register1] - self.registers[register2]
+
+    def mul_alu(self, register1: str, register2: str, register_out: str):
+        self.registers[register_out] = self.registers[register1] * self.registers[register2]
 
 
 class ControlUnit:
@@ -225,6 +231,16 @@ class ControlUnit:
         elif opcode == Opcode.MOD:
             registers = instr["arg"]
             self.data_path.mod_alu(registers[0], registers[1], instr["register"])
+            self.signal_latch_program_counter(sel_next=True)
+            self.tick()
+        elif opcode == Opcode.SUB:
+            registers = instr["arg"]
+            self.data_path.sub_alu(registers[0], registers[1], instr["register"])
+            self.signal_latch_program_counter(sel_next=True)
+            self.tick()
+        elif opcode == Opcode.MUL:
+            registers = instr["arg"]
+            self.data_path.mul_alu(registers[0], registers[1], instr["register"])
             self.signal_latch_program_counter(sel_next=True)
             self.tick()
 

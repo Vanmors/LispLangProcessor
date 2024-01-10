@@ -33,8 +33,7 @@ class LispParser:
                 new_i = self.parse_block(tokens, i)
                 i = new_i - 1
             elif token == "setq":
-                new_i = self.create_variable(tokens, i)
-                i = new_i
+                i = self.create_variable(tokens, i)
             elif token == "if":
                 # Условный оператор
                 new_i = self.parse_if(tokens, i)
@@ -45,12 +44,10 @@ class LispParser:
                 i = new_i - 1
             elif token == "print_char":
                 # Вывод
-                new_i = self.parse_print_char(tokens, i)
-                i = new_i
+                i = self.parse_print_char(tokens, i)
             elif token == "read_char":
                 # Ввод
-                new_i = self.parse_read_char(tokens, i)
-                i = new_i
+                i = self.parse_read_char(tokens, i)
             elif token in ("+", "-", "*", "/", ">", "<", "=", "mod"):
                 # Арифметическая операция
                 new_i = self.parse_arithmetic(tokens, i)
@@ -63,11 +60,9 @@ class LispParser:
                 new_i = self.parse_read_line(tokens, i)
                 i = new_i - 1
             elif token == "print_line":
-                new_i = self.parse_print_line(tokens, i)
-                i = new_i
+                i = self.parse_print_line(tokens, i)
             elif token == "print_int":
-                new_i = self.parse_print_int(tokens, i)
-                i = new_i
+                i = self.parse_print_int(tokens, i)
             elif token.isdigit():
                 self.code.append(
                     {"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10", "arg": int(token)}
@@ -89,7 +84,7 @@ class LispParser:
             i += 1
 
     def parse_arithmetic(self, tokens: list, index: int) -> int:
-        # Арифметическое выражение
+        # Арифметическое выражение или операция сравнения
         arg1 = 0
         arg2 = 0
         operator = tokens[index]
@@ -259,25 +254,26 @@ class LispParser:
             return i + 1
         raise ValueError("Unbalanced brackets.")
 
-    def parse_function_create(self, tokens: list, start_index: int) -> int:
-        # Имя функции
+    def parse_procedure_create(self, tokens: list, start_index: int) -> int:
+        # Имя процедуры
         procedure_name = tokens[start_index + 1]
-
+        self.code.append({"index": len(self.code) + 1, "opcode": Opcode.JMP, "arg": 0})
+        self.stack.append(len(self.code))
         # Сохранение индекса начала в словарь процедур
         self.procedure_labels[procedure_name] = len(self.code) + 1
-        # Аргументы функции
+
         start_body_procedure = start_index + 3
 
         end_block = self.parse_block(tokens, start_body_procedure + 1)
-
-        end_label = f"end_block{self.label_index}"
-        self.label_index += 1
-        self.code.append({"index": len(self.code) + 1, "opcode": "LABEL", "label": end_label})
+        # Метка конца процедуры
+        self.code[self.stack.pop() - 1]["arg"] = len(self.code) + 1
         return end_block
 
-    def parse_function_call(self, token: list, start_index: int):
-        self.code.append({"index": len(self.code) + 1, "opcode": Opcode.CALL, "label": token[start_index]})
-        return start_index + 2
+    def parse_function_call(self, token: list, call_index: int):
+        if self.procedure_labels[token]:
+            start_index = self.procedure_labels[token]
+            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.JMP, "arg": start_index})
+        return call_index + 2
 
     def parse_if(self, tokens: list, if_index: int) -> int:
         # Условие

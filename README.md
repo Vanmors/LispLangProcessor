@@ -28,34 +28,36 @@ lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipelin
 expression = defun_expr 
     | if_expr 
     | while_expr 
+    | defune_expr
     | setq_exp
     | print_char_exp
     | print_string_exp
-    | user_defined_function_call_exp
-    
-defun_expr = "(" "defun" identifier "(" ")" s_expression ")"
+    | user_defined_procedure_call_exp
 
-if_expr = "(" "if" s_expression s_expression s_expression ")"
+defune_expr = "(" defune name() (s_expression) ")"
+
+if_expr = "(" "if" s_expression s_expression ")"
 
 while_expr = "(" "while" s_expression s_expression ")"
 
-setq_exp = "(" "setq" s_expression ")"
+setq_exp = "(" "setq" identifier s_expression ")"
 
 print_char_exp = "(" "print_char" s_expression ")"
 
 print_string_exp = "(" "print_string" s_expression ")"
 
+user_defuned_procedure_call_exp = "()"
+
 ```
 
-* `defun` - определение функции.
-* `if` - условный оператор, возвращает значение второго выражения, если первое не равно 0, иначе третье.
-Обязательно должно быть три выражения - условие, ветка иначе, ветка истины.
+* `defun` - определение процедуры.
+* `if` - условный оператор, возвращает значение второго выражения, если первое выражение выполняется.
 * `while` - цикл с предусловием.
 * `setq` - инициализация переменной.
 * `print_char` - выводит символ с кодом, равным значению выражения, возвращает код символа.
 * `print_string` - выводит строку, равную значению выражения, возвращает выведенную строку.
 * `print_int` - выводит число
-* вызов функции - вызывает код функции.
+* вызов функции - вызывает код процедуры.
 * идентификаторы - возвращают регистр в которой лежит значение переменной.
 
 ## Организация памяти 
@@ -107,7 +109,7 @@ HLT - оставновка программы
 
 ## Транслятор
 
-реализован в [Транслятор](./translator.py)
+реализован в [Транслятор](./pythonLab/translator.py)
 
 Рекурсивно транслирует блоки языка программирования в машинный код
 
@@ -122,11 +124,14 @@ HLT - оставновка программы
 
 ## Модель процессора
 
-Реализован в [Модель процессора](./machine.py)
+Реализован в [Модель процессора](./pythonLab/machine.py)
 
 ### DataPath
 
 ![](./img/DataPath.jpg)
+
+CMP - компаратор, возвращает значение в зависимости от сравненения значений
+MUX - в ALU передаётся либо два регистра либо один регистр и аргумент 
 
 ### ControlUnit
 
@@ -134,7 +139,7 @@ HLT - оставновка программы
 
 ## Тестирование
 
-В качестве тестов использовано 4 алгоритма:
+В качестве тестов использовано 5 алгоритмов:
 
 1. golden/cat.yml - повторяет ввод на выводе
 2. golden/cat.yml - считывает имя и выводит приветствие `hello,name`
@@ -272,5 +277,5 @@ jobs:
 ```text
 | Мориков Иван Дмитриевич | hello_user | 4         | -             | 38         | 123      | 123     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline 
 | Мориков Иван Дмитриевич | cat        | 2         | -             | 8          | 28       | 28      lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
-| Мориков Иван Дмитриевич | prob2      | 11        | -             | 24         | 455      | 455     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
+| Мориков Иван Дмитриевич | prob2      | 11        | -             | 25         | 483      | 483     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
 ```

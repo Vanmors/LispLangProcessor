@@ -17,7 +17,7 @@ lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipelin
 
 <number>       ::= <integer>
 
-<integer>      ::= <digit>+
+<integer>      ::= <digit>
 
 <digit>        ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 
@@ -28,18 +28,15 @@ lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipelin
 expression = defun_expr 
     | if_expr 
     | while_expr 
+    | defune_expr
     | setq_exp
     | print_char_exp
     | print_string_exp
-    | user_defined_function_call_exp
-    
-defun_expr = "(" "defun" identifier "(" identifiers ")" s_expression ")"
+    | user_defined_procedure_call_exp
 
-import_expr = "(" "import" *path-to-file ")
+defune_expr = "(" defune name() (s_expression) ")"
 
-identifiers = identifier | identifier identifiers
-
-if_expr = "(" "if" s_expression s_expression s_expression ")"
+if_expr = "(" "if" s_expression s_expression ")"
 
 while_expr = "(" "while" s_expression s_expression ")"
 
@@ -49,17 +46,18 @@ print_char_exp = "(" "print_char" s_expression ")"
 
 print_string_exp = "(" "print_string" s_expression ")"
 
+user_defuned_procedure_call_exp = "()"
+
 ```
 
-* `defun` - определение функции.
-* `if` - условный оператор, возвращает значение второго выражения, если первое не равно 0, иначе третье.
-Обязательно должно быть три выражения - условие, ветка иначе, ветка истины.
+* `defun` - определение процедуры.
+* `if` - условный оператор, возвращает значение второго выражения, если первое выражение выполняется.
 * `while` - цикл с предусловием.
 * `setq` - инициализация переменной.
 * `print_char` - выводит символ с кодом, равным значению выражения, возвращает код символа.
 * `print_string` - выводит строку, равную значению выражения, возвращает выведенную строку.
 * `print_int` - выводит число
-* вызов функции - вызывает код функции.
+* вызов функции - вызывает код процедуры.
 * идентификаторы - возвращают регистр в которой лежит значение переменной.
 
 ## Организация памяти 
@@ -279,5 +277,5 @@ jobs:
 ```text
 | Мориков Иван Дмитриевич | hello_user | 4         | -             | 38         | 123      | 123     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline 
 | Мориков Иван Дмитриевич | cat        | 2         | -             | 8          | 28       | 28      lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
-| Мориков Иван Дмитриевич | prob2      | 11        | -             | 24         | 455      | 455     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
+| Мориков Иван Дмитриевич | prob2      | 11        | -             | 25         | 483      | 483     lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipeline
 ```
