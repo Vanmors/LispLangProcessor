@@ -6,6 +6,8 @@ lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipelin
 
 ## Язык программирования
 
+Любое выражение в скобках (s-expression) возвращает значение. Поддерживаются числовые и строковые литералы. Типизация динамическая, поддерживаются два типа: целые числа и строки
+
 ```
 <program>      ::= <expression>
 
@@ -22,6 +24,30 @@ lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipelin
 <letter>       ::= 'A' | 'B' | ... | 'Z' | 'a' | 'b' | ... | 'z'
 
 <symbol-char>  ::= <letter> | <digit> | '+' | '-' | '*' | '/' | ...
+
+expression = defun_expr 
+    | if_expr 
+    | while_expr 
+    | setq_exp
+    | print_char_exp
+    | print_string_exp
+    | user_defined_function_call_exp
+    
+defun_expr = "(" "defun" identifier "(" identifiers ")" s_expression ")"
+
+import_expr = "(" "import" *path-to-file ")
+
+identifiers = identifier | identifier identifiers
+
+if_expr = "(" "if" s_expression s_expression s_expression ")"
+
+while_expr = "(" "while" s_expression s_expression ")"
+
+setq_exp = "(" "setq" identifier s_expression ")"
+
+print_char_exp = "(" "print_char" s_expression ")"
+
+print_string_exp = "(" "print_string" s_expression ")"
 
 ```
 
@@ -61,20 +87,6 @@ lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipelin
 ввода пользователя - тоже строка)
 
 * `CODE` - секция, в которой хранятся инструкции.
-
-Типизация:
-Lisp является динамически типизированным языком. Типы данных определяются в процессе выполнения программы.
-
-## Виды литералов:
-
-### Числовые литералы:
-
-1. Целые числа: 42, -10, 0
-2. Вещественные числа: 3.14, -0.5
-
-### Символьные литералы:
-
-Символы представлены последовательностью символов, например, x, hello
 
 ## Система команд
 
@@ -118,16 +130,24 @@ HLT - оставновка программы
 
 ### DataPath
 
+![](../img/DataPath.jpg)
+
+CMP - компаратор, возвращает значение в зависимости от сравненения значений
+MUX - в ALU передаётся либо два регистра либо один регистр и аргумент 
+
 ### ControlUnit
+
+![](../img/ControlUnit.jpeg)
 
 ## Тестирование
 
-В качестве тестов использовано 4 алгоритма:
+В качестве тестов использовано 5 алгоритмов:
 
 1. golden/cat.yml - повторяет ввод на выводе
 2. golden/cat.yml - считывает имя и выводит приветствие `hello,name`
 3. golden/hello.yml - записывает `hello` в переменную и вывод её
 4. golden/prob2.yml - проблема 2 Эйлера
+5. golden/expression.yml - алгоритм для языка lisp где любое выражение (statement) -- expression
 
 CI:
 ```yaml

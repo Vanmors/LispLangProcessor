@@ -31,25 +31,25 @@ class DataPath:
         self.var_memory = {}
         self.comparator = 0
 
-    def latch_register_memory(self, register, name):
+    def latch_register_memory(self, register: str, name: str):
         for instruction in self.memory:
             if type(instruction) != int and name in instruction:
                 self.registers[register] = self.memory[instruction[name] + self.registers["R0"]]
 
-    def increment(self, register):
+    def increment(self, register: str):
         self.alu = 1
         self.registers[register] += self.alu
 
-    def latch_register_input(self, register, value):
+    def latch_register_input(self, register: str, value: int):
         if type(value) == int:
             self.registers[register] = value
         else:
             self.registers[register] = self.registers[value]
 
-    def sum_alu(self, register1, register2):
+    def sum_alu(self, register1: str, register2: str):
         self.alu = self.registers[register1] + self.registers[register2]
 
-    def signal_output(self, register, type_arg):
+    def signal_output(self, register: str, type_arg: str):
         value = self.registers[register]
         if type_arg == "value":
             logging.debug("output: %s << %s", repr("".join(self.output_buffer)), repr(str(value)))
@@ -58,11 +58,11 @@ class DataPath:
             logging.debug("output: %s << %s", repr("".join(self.output_buffer)), repr(chr(value)))
             self.output_buffer.append(chr(value))
 
-    def save_program_to_mem(self, program):
+    def save_program_to_mem(self, program : list):
         for i in range(len(program)):
             self.memory.append(program[i])
 
-    def save_to_mem(self, name, register):
+    def save_to_mem(self, name: str, register: str):
         for instruction in self.memory:
             if type(instruction) != int and name in instruction:
                 self.memory.append(self.registers[register])
@@ -70,13 +70,13 @@ class DataPath:
         self.memory.append({name: len(self.memory) + 1})
         self.memory.append(self.registers[register])
 
-    def zero(self):
+    def zero(self) -> int:
         return self.alu == 0
 
-    def set_alu(self, register):
+    def set_alu(self, register: str):
         self.alu = self.registers[register]
 
-    def signal_input(self, register):
+    def signal_input(self, register: str):
         if len(self.input_buffer) == 0:
             self.latch_register_input(register, 0)
             self.set_alu(register)
@@ -87,7 +87,7 @@ class DataPath:
         self.registers[register] = symbol_code
         logging.debug("input: %s", repr(symbol))
 
-    def compare_reg(self, register1, register2):
+    def compare_reg(self, register1: str, register2: str):
         self.set_alu(register1)
         if self.alu == self.registers[register2]:
             self.comparator = 0
@@ -99,13 +99,13 @@ class DataPath:
     def get_comparator(self):
         return self.comparator
 
-    def add_alu(self, register1, register2, register_out):
+    def add_alu(self, register1: str, register2: str, register_out: str):
         self.registers[register_out] = self.registers[register1] + self.registers[register2]
 
-    def div_alu(self, register1, register2, register_out):
+    def div_alu(self, register1: str, register2: str, register_out: str):
         self.registers[register_out] = self.registers[register1] / self.registers[register2]
 
-    def mod_alu(self, register1, register2, register_out):
+    def mod_alu(self, register1: str, register2: str, register_out: str):
         self.registers[register_out] = self.registers[register1] % self.registers[register2]
 
 
@@ -131,22 +131,15 @@ class ControlUnit:
         return self._tick
 
     def signal_latch_program_counter(self, sel_next):
-        """Защёлкнуть новое значение счётчика команд.
 
-        Если `sel_next` равен `True`, то счётчик будет увеличен на единицу,
-        иначе -- будет установлен в значение аргумента текущей инструкции.
-        """
         if sel_next:
             self.program_counter += 1
         else:
             instr = self.data_path.memory[self.program_counter]
-            # assert "arg" in instr, "internal error"
             self.program_counter = instr["arg"] - 1
 
     def decode_and_execute_control_flow_instruction(self, instr, opcode):
-        """Декодировать и выполнить инструкцию управления потоком исполнения. В
-        случае успеха -- вернуть `True`, чтобы перейти к следующей инструкции.
-        """
+
         if opcode is Opcode.HLT:
             raise StopIteration()
 

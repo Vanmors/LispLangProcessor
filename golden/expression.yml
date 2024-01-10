@@ -1,0 +1,39 @@
+in_source: |-
+  setq x 32
+  setq y 5
+  (if (= 0 (if(= y 5) (0))) (print_int x))
+in_stdin: |-
+  Ivan
+out_code: |-
+  [{"index": 1, "opcode": "LD", "register": "R1", "arg": 32},
+   {"index": 2, "opcode": "LD", "register": "R2", "arg": 5},
+   {"index": 3, "opcode": "LD", "register": "R3", "arg": 0},
+   {"index": 4, "opcode": "LD", "register": "R10", "arg": 0},
+   {"index": 5, "opcode": "LD", "register": "R4", "arg": 5},
+   {"index": 6, "opcode": "CMP", "register": "R2", "arg": "R4"},
+   {"index": 7, "opcode": "JE", "arg": 9},
+   {"index": 8, "opcode": "LD", "register": "R10", "arg": 0},
+   {"index": 9, "opcode": "CMP", "register": "R3", "arg": "R10"},
+   {"index": 10, "opcode": "JE", "arg": 12},
+   {"index": 11, "opcode": "OUT", "register": "R1", "type": "value"},
+   {"index": 12, "opcode": "HLT"}]
+out_stdout: |
+  source LoC: 3 code instr: 12
+  ============================================================
+  32
+  instr_counter:  11 ticks: 11
+out_log: |
+  DEBUG   machine:simulation    TICK:   0 PC:   0 ALU: 0 	LD R1
+  DEBUG   machine:simulation    TICK:   1 PC:   1 ALU: 0 	LD R2
+  DEBUG   machine:simulation    TICK:   2 PC:   2 ALU: 0 	LD R3
+  DEBUG   machine:simulation    TICK:   3 PC:   3 ALU: 0 	LD R10
+  DEBUG   machine:simulation    TICK:   4 PC:   4 ALU: 0 	LD R4
+  DEBUG   machine:simulation    TICK:   5 PC:   5 ALU: 0 	CMP R2
+  DEBUG   machine:simulation    TICK:   6 PC:   6 ALU: 5 	JE
+  DEBUG   machine:simulation    TICK:   7 PC:   7 ALU: 5 	LD R10
+  DEBUG   machine:simulation    TICK:   8 PC:   8 ALU: 5 	CMP R3
+  DEBUG   machine:simulation    TICK:   9 PC:   9 ALU: 0 	JE
+  DEBUG   machine:simulation    TICK:  10 PC:  10 ALU: 0 	OUT R1
+  DEBUG   machine:signal_output output: '' << '32'
+  DEBUG   machine:simulation    TICK:  11 PC:  11 ALU: 0 	HLT
+  INFO    machine:simulation    output_buffer: '32'

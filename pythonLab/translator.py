@@ -13,6 +13,7 @@ class LispParser:
         self.stack = []
         self.registres_var = {}
         self.registres_val = Registres()
+        self.procedure_labels = {}
 
     def translate(self, expression):
         for i in range(1, 11):
@@ -67,12 +68,17 @@ class LispParser:
             elif token == "print_int":
                 new_i = self.parse_print_int(tokens, i)
                 i = new_i
+            elif token.isdigit():
+                self.code.append(
+                    {"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10",
+                     "arg": int(token)}
+                )
             elif token.isalpha():
                 # Переменная или вызов функции
                 if (
-                    i + 1 < len(tokens)
-                    and tokens[i + 1] == "("
-                    and (tokens[i + 2].isalpha() or tokens[i + 2].isalpha() == ")")
+                        i + 1 < len(tokens)
+                        and tokens[i + 1] == "("
+                        and (tokens[i + 2].isalpha() or tokens[i + 2].isalpha() == ")")
                 ):
                     # Функция
                     new_i = self.parse_function_call(tokens, i)
@@ -122,46 +128,36 @@ class LispParser:
         self.registres_val.put_in_register(number, 0)
 
         if operator == "+":
-            self.code.append(
-                {"index": len(self.code) + 1, "opcode": Opcode.ADD, "register": number, "arg": [arg1, arg2]}
-            )
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10", "arg": number})
+            self.arithmetic_operation(Opcode.ADD, number, arg1, arg2)
         elif operator == "-":
-            self.code.append(
-                {"index": len(self.code) + 1, "opcode": Opcode.SUB, "register": number, "arg": [arg1, arg2]}
-            )
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10", "arg": number})
+            self.arithmetic_operation(Opcode.SUB, number, arg1, arg2)
         elif operator == "*":
-            self.code.append(
-                {"index": len(self.code) + 1, "opcode": Opcode.MUL, "register": number, "arg": [arg1, arg2]}
-            )
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10", "arg": number})
+            self.arithmetic_operation(Opcode.MUL, number, arg1, arg2)
         elif operator == "/":
-            self.code.append(
-                {"index": len(self.code) + 1, "opcode": Opcode.DIV, "register": number, "arg": [arg1, arg2]}
-            )
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10", "arg": number})
+            self.arithmetic_operation(Opcode.DIV, number, arg1, arg2)
         elif operator == "mod":
-            self.code.append(
-                {"index": len(self.code) + 1, "opcode": Opcode.MOD, "register": number, "arg": [arg1, arg2]}
-            )
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10", "arg": number})
+            self.arithmetic_operation(Opcode.MOD, number, arg1, arg2)
         elif operator == ">":
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.CMP, "register": arg1, "arg": arg2})
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.JG, "arg": 0})
-            self.stack.append(len(self.code))
+            self.compare_operation(Opcode.JG, arg1, arg2)
         elif operator == "<":
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.CMP, "register": arg1, "arg": arg2})
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.JL, "arg": 0})
-            self.stack.append(len(self.code))
+            self.compare_operation(Opcode.JL, arg1, arg2)
         elif operator == "=":
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.CMP, "register": arg1, "arg": arg2})
-            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.JE, "arg": 0})
-            self.stack.append(len(self.code))
+            self.compare_operation(Opcode.JE, arg1, arg2)
         else:
             raise NotImplementedError(f"Unsupported arithmetic operator: {operator}")
         self.registres_val.clean_register(number)
         return args_end_index
+
+    def arithmetic_operation(self, opcode: Opcode, number_register: str, arg1, arg2):
+        self.code.append(
+            {"index": len(self.code) + 1, "opcode": opcode, "register": number_register, "arg": [arg1, arg2]}
+        )
+        self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10", "arg": number_register})
+
+    def compare_operation(self, opcode: Opcode, arg1, arg2):
+        self.code.append({"index": len(self.code) + 1, "opcode": Opcode.CMP, "register": arg1, "arg": arg2})
+        self.code.append({"index": len(self.code) + 1, "opcode": opcode, "arg": 0})
+        self.stack.append(len(self.code))
 
     def create_variable(self, tokens: list, start_index: int) -> int:
         start_value = start_index + 2
@@ -246,7 +242,7 @@ class LispParser:
         end_index = self.find_closing_bracket(tokens, start_index)
 
         # Рекурсивно обрабатываем внутренний блок
-        inner_tokens = tokens[start_index + 1 : end_index]
+        inner_tokens = tokens[start_index + 1: end_index]
         self.parse_tokens(inner_tokens)
         return end_index
 
@@ -266,25 +262,14 @@ class LispParser:
 
     def parse_function_create(self, tokens: list, start_index: int) -> int:
         # Имя функции
+        procedure_name = tokens[start_index + 1]
 
+        # Сохранение индекса начала в словарь процедур
+        self.procedure_labels[procedure_name] = len(self.code) + 1
         # Аргументы функции
-        args_start_index = start_index + 3
-        args_end_index = args_start_index
-        while tokens[args_end_index] != ")":
-            args_end_index += 1
+        start_body_procedure = start_index + 3
 
-        args_tokens = tokens[args_start_index:args_end_index]
-
-        self.code.append(
-            {
-                "index": len(self.code) + 1,
-                "opcode": Opcode.LD,
-                "register": f"R{len(self.code) + 1}",
-                "name": args_tokens[0],
-            }
-        )
-
-        end_block = self.parse_block(tokens, args_end_index + 1)
+        end_block = self.parse_block(tokens, start_body_procedure + 1)
 
         end_label = f"end_block{self.label_index}"
         self.label_index += 1
@@ -342,10 +327,19 @@ class LispParser:
         return read_index + 2
 
     def parse_print_int(self, tokens: list, print_index: int):
-        number_register = self.registres_var[tokens[print_index + 1]]
+        number_register = 0
+        if tokens[print_index + 1] == "(":
+            self.parse_block(tokens, print_index + 1)
+            number_register = "R10"
+        elif tokens[print_index + 1].isalpha():
+            number_register = self.registres_var[tokens[print_index + 1]]
+        elif tokens[print_index + 1].isdigit():
+            number_register = self.registres_val.get_free_register()
+            self.code.append(
+                {"index": len(self.code) + 1, "opcode": Opcode.LD, "register": number_register,
+                 "arg": tokens[print_index + 1]})
         self.code.append(
-            {"index": len(self.code) + 1, "opcode": Opcode.OUT, "register": number_register, "type": "value"}
-        )
+            {"index": len(self.code) + 1, "opcode": Opcode.OUT, "register": number_register, "type": "value"})
         self.registres_val.clean_register(number_register)
         return print_index + 2
 

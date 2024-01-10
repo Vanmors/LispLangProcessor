@@ -87,12 +87,12 @@ ignore = [
     "RUF003", # Comment contains ambiguous `с` (CYRILLIC SMALL LETTER ES). Did you mean `c` (LATIN SMALL LETTER C)
     # to simplify code for non-Python programmers
     "PTH118", # `os.path.join()` should be replaced by `Path` with `/` operator
-    "C901",
-    "TRY003",
-    "F541",
+    "C901", # is too complex
+    "TRY003", # Avoid specifying long messages outside the exception class
+    "F541",  # f-string without any placeholders
     "UP032", # [*] Use f-string instead of `format` call
-    "E721",
-    "I001",
+    "E721", # Do not compare types, use `isinstance()`
+    "I001", #  Import block is un-sorted or un-formatted
 
 
 ]
