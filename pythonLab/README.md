@@ -6,7 +6,7 @@ lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipelin
 
 ## Язык программирования
 
-Любое выражение в скобках (s-expression) возвращает значение. Поддерживаются числовые и строковые литералы. Типизация динамическая, поддерживаются два типа: целые числа и строки
+Поддерживаются числовые и строковые литералы. Типизация динамическая, поддерживаются два типа: целые числа и строки
 
 ```
 <program>      ::= <expression>
@@ -31,6 +31,7 @@ expression = defun_expr
     | defune_expr
     | setq_exp
     | print_char_exp
+    | print_int
     | print_string_exp
     | user_defined_procedure_call_exp
 
@@ -42,9 +43,11 @@ while_expr = "(" "while" s_expression s_expression ")"
 
 setq_exp = "(" "setq" identifier s_expression ")"
 
+print_int = "(" print_int s_expression ")"
+
 print_char_exp = "(" "print_char" s_expression ")"
 
-print_string_exp = "(" "print_string" s_expression ")"
+print_string_exp = "(" "print_string"  line ")"
 
 user_defuned_procedure_call_exp = "()"
 
@@ -88,7 +91,7 @@ user_defuned_procedure_call_exp = "()"
 
 ## Система команд
 
-* Машинное слово - 32 бита, знаковое.
+* Машинное слово - 64 бита.
 * Поток управления:
   * Поддерживаются условные и безусловные переходы.
   * В случае, если инструкция не касается переходов, то после нее инкрементится PC.

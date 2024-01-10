@@ -17,7 +17,7 @@ lisp | risc | neum | hw | tick | struct | stream | port | cstr | prob2 | pipelin
 
 <number>       ::= <integer>
 
-<integer>      ::= <digit>+
+<integer>      ::= <digit>
 
 <digit>        ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 
@@ -31,6 +31,7 @@ expression = defun_expr
     | defune_expr
     | setq_exp
     | print_char_exp
+    | print_int
     | print_string_exp
     | user_defined_procedure_call_exp
 
@@ -42,9 +43,11 @@ while_expr = "(" "while" s_expression s_expression ")"
 
 setq_exp = "(" "setq" identifier s_expression ")"
 
+print_int = "(" print_int s_expression ")"
+
 print_char_exp = "(" "print_char" s_expression ")"
 
-print_string_exp = "(" "print_string" s_expression ")"
+print_string_exp = "(" "print_string"  line ")"
 
 user_defuned_procedure_call_exp = "()"
 
