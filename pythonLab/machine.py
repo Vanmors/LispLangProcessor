@@ -49,10 +49,14 @@ class DataPath:
     def sum_alu(self, register1, register2):
         self.alu = self.registers[register1] + self.registers[register2]
 
-    def signal_output(self, register):
-        symbol = chr(self.registers[register])
-        logging.debug("output: %s << %s", repr("".join(self.output_buffer)), repr(symbol))
-        self.output_buffer.append(symbol)
+    def signal_output(self, register, type):
+        value = self.registers[register]
+        if type == "value":
+            logging.debug("output: %s << %s", repr("".join(self.output_buffer)), repr(str(value)))
+            self.output_buffer.append(str(value))
+        else:
+            logging.debug("output: %s << %s", repr("".join(self.output_buffer)), repr(chr(value)))
+            self.output_buffer.append(chr(value))
 
     def save_program_to_mem(self, program):
         for i in range(len(program)):
@@ -101,6 +105,8 @@ class DataPath:
     def div_alu(self, register1, register2, register_out):
         self.registers[register_out] = self.registers[register1] / self.registers[register2]
 
+    def mod_alu(self, register1, register2, register_out):
+        self.registers[register_out] = self.registers[register1] % self.registers[register2]
 
 class ControlUnit:
     program_counter = None
@@ -203,7 +209,10 @@ class ControlUnit:
             self.tick()
 
         elif opcode is Opcode.OUT:
-            self.data_path.signal_output(instr["register"])
+            if "type" in instr:
+                self.data_path.signal_output(instr["register"], instr["type"])
+            else:
+                self.data_path.signal_output(instr["register"], None)
             self.signal_latch_program_counter(sel_next=True)
             self.tick()
         elif opcode == Opcode.CMP:
@@ -224,7 +233,11 @@ class ControlUnit:
             self.data_path.div_alu(registers[0], registers[1], instr["register"])
             self.signal_latch_program_counter(sel_next=True)
             self.tick()
-
+        elif opcode == Opcode.MOD:
+            registers = instr["arg"]
+            self.data_path.mod_alu(registers[0], registers[1], instr["register"])
+            self.signal_latch_program_counter(sel_next=True)
+            self.tick()
 
     def __repr__(self):
         """Вернуть строковое представление состояния процессора."""
@@ -269,6 +282,7 @@ def simulation(code, input_tokens, memory_size, limit):
         logging.warning("Limit exceeded!")
     logging.info("output_buffer: %s", repr("".join(data_path.output_buffer)))
     return "".join(data_path.output_buffer), instr_counter, control_unit.current_tick()
+
 
 def main(code_file, input_file):
     codes = read_code(code_file)

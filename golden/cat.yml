@@ -1,6 +1,6 @@
 in_source: |-
   (read_char a
-    (loop (> a 0) (print_char a) (read_char a)))
+    (while (> a 0) (print_char a) (read_char a)))
 in_stdin: |-
   Ivan
 out_code: |-

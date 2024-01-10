@@ -7,7 +7,7 @@ from registres import Registres
 
 class LispParser:
     def __init__(self):
-        self.code = [] * 1000
+        self.code = []
         self.label_index = 0
         self.pc = 0
         self.stack = []
@@ -15,16 +15,8 @@ class LispParser:
         self.registres_val = Registres()
 
     def translate(self, expression):
-        self.registres_val.allocate_register("R1")
-        self.registres_val.allocate_register("R2")
-        self.registres_val.allocate_register("R3")
-        self.registres_val.allocate_register("R4")
-        self.registres_val.allocate_register("R5")
-        self.registres_val.allocate_register("R6")
-        self.registres_val.allocate_register("R7")
-        self.registres_val.allocate_register("R8")
-        self.registres_val.allocate_register("R9")
-        self.registres_val.allocate_register("R10")
+        for i in range(1, 11):
+            self.registres_val.allocate_register(f"R{i}")
 
         tokens = expression.replace("(", " ( ").replace(")", " ) ").split()
         self.parse_tokens(tokens)
@@ -46,7 +38,7 @@ class LispParser:
                 # Условный оператор
                 new_i = self.parse_if(tokens, i)
                 i = new_i - 1
-            elif token == "loop":
+            elif token == "while":
                 # Цикл
                 new_i = self.parse_loop(tokens, i)
                 i = new_i - 1
@@ -58,7 +50,7 @@ class LispParser:
                 # Ввод
                 new_i = self.parse_read_char(tokens, i)
                 i = new_i
-            elif token in ("+", "-", "*", "/", ">", "<", "="):
+            elif token in ("+", "-", "*", "/", ">", "<", "=", "mod"):
                 # Арифметическая операция
                 new_i = self.parse_arithmetic(tokens, i)
                 i = new_i - 1
@@ -71,6 +63,9 @@ class LispParser:
                 i = new_i - 1
             elif token == "print_line":
                 new_i = self.parse_print_line(tokens, i)
+                i = new_i
+            elif token == "print_int":
+                new_i = self.parse_print_int(tokens, i)
                 i = new_i
             elif token.isalpha():
                 # Переменная или вызов функции
@@ -140,6 +135,11 @@ class LispParser:
                               "arg": number})
         elif operator == "/":
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.DIV, "register": number,
+                              "arg": [arg1, arg2]})
+            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10",
+                              "arg": number})
+        elif operator == "mod":
+            self.code.append({"index": len(self.code) + 1, "opcode": Opcode.MOD, "register": number,
                               "arg": [arg1, arg2]})
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10",
                               "arg": number})
@@ -319,6 +319,13 @@ class LispParser:
         self.registres_val.put_in_register(number, 0)
         return read_index + 2
 
+    def parse_print_int(self, tokens: list, print_index: int):
+        number_register = self.registres_var[tokens[print_index + 1]]
+        self.code.append(
+            {"index": len(self.code) + 1, "opcode": Opcode.OUT, "register": number_register, "type": "value"})
+        self.registres_val.clean_register(number_register)
+        return print_index + 2
+
     def parse_read_line(self, tokens: list, read_index: int) -> int:
         number = self.registres_val.get_free_register()
         start_index = len(self.code) + 1
@@ -390,8 +397,8 @@ def main(source, target):
 
 
 if __name__ == "__main__":
-    source = "lisp.txt"
-    target = "target.txt"
-    # assert len(sys.argv) == 3, "Wrong arguments: translator.py <input_file> <target_file>"
-    # _, source, target = sys.argv
+    # source = "lisp.txt"
+    # target = "target.txt"
+    assert len(sys.argv) == 3, "Wrong arguments: translator.py <input_file> <target_file>"
+    _, source, target = sys.argv
     main(source, target)
