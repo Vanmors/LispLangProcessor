@@ -243,6 +243,9 @@ class ControlUnit:
             self.data_path.mul_alu(registers[0], registers[1], instr["register"])
             self.signal_latch_program_counter(sel_next=True)
             self.tick()
+        elif opcode == Opcode.RET:
+            self.program_counter = self.data_path.registers["R11"]
+            self.tick()
 
     def __repr__(self):
         """Вернуть строковое представление состояния процессора."""

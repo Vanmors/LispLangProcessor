@@ -265,6 +265,7 @@ class LispParser:
         start_body_procedure = start_index + 3
 
         end_block = self.parse_block(tokens, start_body_procedure + 1)
+        self.code.append({"index": len(self.code) + 1, "opcode": Opcode.RET})
         # Метка конца процедуры
         self.code[self.stack.pop() - 1]["arg"] = len(self.code) + 1
         return end_block
@@ -272,6 +273,9 @@ class LispParser:
     def parse_function_call(self, token: list, call_index: int):
         if self.procedure_labels[token]:
             start_index = self.procedure_labels[token]
+            self.code.append(
+                {"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R11", "arg": len(self.code) + 3}
+            )
             self.code.append({"index": len(self.code) + 1, "opcode": Opcode.JMP, "arg": start_index})
         return call_index + 2
 

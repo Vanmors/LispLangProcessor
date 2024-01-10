@@ -20,6 +20,7 @@ class Opcode(Enum):
     JG: str = "JG"
     JE: str = "JE"
     JL: str = "JL"
+    RET: str = "RET"
 
     def __str__(self) -> str:
         return self.value
