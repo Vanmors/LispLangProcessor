@@ -58,7 +58,7 @@ class DataPath:
             logging.debug("output: %s << %s", repr("".join(self.output_buffer)), repr(chr(value)))
             self.output_buffer.append(chr(value))
 
-    def save_program_to_mem(self, program : list):
+    def save_program_to_mem(self, program: list):
         for i in range(len(program)):
             self.memory.append(program[i])
 
@@ -131,7 +131,6 @@ class ControlUnit:
         return self._tick
 
     def signal_latch_program_counter(self, sel_next):
-
         if sel_next:
             self.program_counter += 1
         else:
@@ -139,7 +138,6 @@ class ControlUnit:
             self.program_counter = instr["arg"] - 1
 
     def decode_and_execute_control_flow_instruction(self, instr, opcode):
-
         if opcode is Opcode.HLT:
             raise StopIteration()
 

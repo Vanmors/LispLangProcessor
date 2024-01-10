@@ -70,15 +70,14 @@ class LispParser:
                 i = new_i
             elif token.isdigit():
                 self.code.append(
-                    {"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10",
-                     "arg": int(token)}
+                    {"index": len(self.code) + 1, "opcode": Opcode.LD, "register": "R10", "arg": int(token)}
                 )
             elif token.isalpha():
                 # Переменная или вызов функции
                 if (
-                        i + 1 < len(tokens)
-                        and tokens[i + 1] == "("
-                        and (tokens[i + 2].isalpha() or tokens[i + 2].isalpha() == ")")
+                    i + 1 < len(tokens)
+                    and tokens[i + 1] == "("
+                    and (tokens[i + 2].isalpha() or tokens[i + 2].isalpha() == ")")
                 ):
                     # Функция
                     new_i = self.parse_function_call(tokens, i)
@@ -242,7 +241,7 @@ class LispParser:
         end_index = self.find_closing_bracket(tokens, start_index)
 
         # Рекурсивно обрабатываем внутренний блок
-        inner_tokens = tokens[start_index + 1: end_index]
+        inner_tokens = tokens[start_index + 1 : end_index]
         self.parse_tokens(inner_tokens)
         return end_index
 
@@ -336,10 +335,16 @@ class LispParser:
         elif tokens[print_index + 1].isdigit():
             number_register = self.registres_val.get_free_register()
             self.code.append(
-                {"index": len(self.code) + 1, "opcode": Opcode.LD, "register": number_register,
-                 "arg": tokens[print_index + 1]})
+                {
+                    "index": len(self.code) + 1,
+                    "opcode": Opcode.LD,
+                    "register": number_register,
+                    "arg": tokens[print_index + 1],
+                }
+            )
         self.code.append(
-            {"index": len(self.code) + 1, "opcode": Opcode.OUT, "register": number_register, "type": "value"})
+            {"index": len(self.code) + 1, "opcode": Opcode.OUT, "register": number_register, "type": "value"}
+        )
         self.registres_val.clean_register(number_register)
         return print_index + 2
 
