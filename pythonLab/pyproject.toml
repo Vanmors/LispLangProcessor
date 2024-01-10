@@ -83,11 +83,16 @@ ignore = [
     "T201", # `print` found
     "PTH123", # `open()` should be replaced by `Path.open()`
     #    "E501",   # allow lines longer than 80 symbols (up to 120)
-    #    "RUF002", # Docstring contains ambiguous `В` (CYRILLIC CAPITAL LETTER VE). Did you mean `B` (LATIN CAPITAL LETTER B)
-    #    "RUF003", # Comment contains ambiguous `с` (CYRILLIC SMALL LETTER ES). Did you mean `c` (LATIN SMALL LETTER C)
+    "RUF002", # Docstring contains ambiguous `В` (CYRILLIC CAPITAL LETTER VE). Did you mean `B` (LATIN CAPITAL LETTER B)
+    "RUF003", # Comment contains ambiguous `с` (CYRILLIC SMALL LETTER ES). Did you mean `c` (LATIN SMALL LETTER C)
     # to simplify code for non-Python programmers
-    # "PTH118", # `os.path.join()` should be replaced by `Path` with `/` operator
-    # "UP032",  # [*] Use f-string instead of `format` call
+    "PTH118", # `os.path.join()` should be replaced by `Path` with `/` operator
+    "C901",
+    "TRY003",
+    "F541",
+    "UP032", # [*] Use f-string instead of `format` call
+    "E721",
+    "I001",
 
 
 ]
